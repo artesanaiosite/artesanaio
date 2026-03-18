@@ -31,6 +31,9 @@ export default function Header() {
           <Link href="/" className="hover:opacity-80 transition">
             Início
           </Link>
+          <Link href="/loja" className="hover:opacity-80 transition">
+            Loja
+          </Link>
           <Link href="/presentes-artesanais" className="hover:opacity-80 transition">
             Presentes Artesanais
           </Link>

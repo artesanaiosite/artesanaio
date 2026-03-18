@@ -53,7 +53,7 @@ export default async function ProdutoPage({ params }: ProdutoPageProps) {
 
   return (
     <main className="w-full mx-auto p-6">
-      <Link href="/" className="text-purple-700 hover:underline">
+      <Link href="/loja" className="text-purple-700 hover:underline">
         ← Voltar
       </Link>
 

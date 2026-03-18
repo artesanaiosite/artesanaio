@@ -88,7 +88,7 @@ export default function MeusPedidosPage() {
               <p><strong>Total:</strong> R$ {pedido.total.toFixed(2)}</p>
               <p><strong>Criado em:</strong> {new Date(pedido.createdAt).toLocaleString('pt-BR')}</p>
               <a
-                href={`/pedido/${pedido.id}`}
+                href={`/loja/pedido/${pedido.id}`}
                 className="text-blue-600 underline mt-2 inline-block"
               >
                 Ver detalhes
