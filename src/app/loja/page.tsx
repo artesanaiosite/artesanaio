@@ -3,6 +3,8 @@ import Link from 'next/link';
 import { prisma } from '@/lib/prisma';
 import Image from 'next/image';
 
+export const dynamic = 'force-dynamic';
+
 type ProductWithRelations = {
   id: string;
   name: string;
@@ -21,7 +23,7 @@ async function getProducts() {
   });
 }
 
-export default async function Loja() {
+export default async function LojaPage() {
   const products = await getProducts();
 
   return (

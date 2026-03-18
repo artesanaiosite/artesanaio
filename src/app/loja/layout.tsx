@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { CartProvider } from '@/context/CartContext';
 import "./globals.css";
@@ -18,22 +18,29 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Loja de Roupas CM Teixeiras",
+  title: "Artesanaio | Artesanato feito à mão",
+  description:
+    "Pulseiras de miçanga, macramê artesanal e acessórios feitos à mão. Peças artesanais exclusivas e presentes criativos.",
   authors: [
     {
-      name: "CM Teixeiras",
-      url: "https://lojateixeiras.com",
-    },  ],
-  keywords: [
-    "loja de roupas",
-    "roupas personalizadas",
-    "eventos",
-    "empresas",
-    "moda",
-    "vestuário",
-    "roupas sob medida",
+      name: "Artesanaio",
+      url: "https://artesanaio.com.br",
+    },
   ],
-  description: "Loja de roupas com soluções personalizadas para eventos e empresas.",
+  keywords: [
+    "artesanato feito à mão",
+    "pulseiras de miçanga",
+    "macramê artesanal",
+    "acessórios artesanais",
+    "presentes artesanais",
+    "artesanato personalizado",
+  ],
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
 };
 
 export default function RootLayout({
