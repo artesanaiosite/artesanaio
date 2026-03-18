@@ -12,7 +12,7 @@ export default function CarrinhoPage() {
     return (
       <main className="p-6 text-center">
         <h2 className="text-2xl font-semibold mb-4">Seu carrinho está vazio</h2>
-        <Link href="/" className="text-green-700 hover:underline">
+        <Link href="/loja" className="text-green-700 hover:underline">
           Voltar à loja
         </Link>
       </main>
@@ -36,7 +36,7 @@ export default function CarrinhoPage() {
               className="w-20 h-20 object-cover rounded"
             />
             <div className="flex-1">
-              <Link href={`/produto/${item.slug}`}>
+              <Link href={`/loja/produto/${item.slug}`}>
                 <h2 className="text-lg font-semibold hover:underline">{item.name}</h2>
               </Link>
               <p className="text-sm text-gray-600">
@@ -67,7 +67,7 @@ export default function CarrinhoPage() {
       <div className="mt-8 text-right">
         <p className="mb-8 text-xl font-semibold">Total: R$ {totalPrice.toFixed(2)}</p>
         <Link
-          href="/checkout"
+          href="/loja/checkout"
           className="mt-8 bg-green-700 text-white px-6 py-3 rounded-md hover:bg-green-800 transition"
         >
           Finalizar Compra

@@ -55,10 +55,10 @@ export default function RootLayout({
       >
         <Toaster position="top-right" reverseOrder={false} />
          <CartProvider>
-          <Header />
+          
           <CategoriasMenu />
           {children}
-          <Footer />
+          
           </CartProvider>
       </body>
     </html>

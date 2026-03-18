@@ -10,7 +10,7 @@ export default function CheckoutPage() {
 
   return (
     <main className="max-w-5xl mx-auto p-6">
-      <Link href="/" className="text-purple-700 hover:underline">
+      <Link href="/loja" className="text-purple-700 hover:underline">
         ← Voltar à loja
       </Link>
 

@@ -39,7 +39,7 @@ export default async function CategoriaPage({ params }: CategoriaPageProps) {
   }
 
   return (
-    <main className="max-w-7xl mx-auto py-8 px-4">
+    <section className="max-w-7xl mx-auto py-8 px-4">
       <h1 className="text-2xl font-bold mb-6">Categoria: {categoriaNome}</h1>
 
       {produtos.length === 0 ? (
@@ -49,10 +49,10 @@ export default async function CategoriaPage({ params }: CategoriaPageProps) {
           {produtos.map((product) => (
             <Link
               key={product.id}
-              href={`/produto/${product.slug}`}
+              href={`/loja/produto/${product.slug}`}
               className="border rounded p-4 hover:shadow-lg transition"
             >
-              <Image src={product.imageUrl} alt={product.name} className="w-full h-120 object-cover mb-2 rounded" />
+              <img src={product.imageUrl || '/logo-artesanaio.jpeg'} alt={product.name} className="w-full h-120 object-cover mb-2 rounded" />
               <h2 className="font-semibold text-lg">{product.name}</h2>
               <p className="text-gray-600">R$ {product.price.toFixed(2)}</p>
               <button className='bg-green-600 px-8 py-2 m-4 rounded-xl text-center font-bold text-white'>VER DETALHES</button>
@@ -60,6 +60,6 @@ export default async function CategoriaPage({ params }: CategoriaPageProps) {
           ))}
         </div>
       )}
-    </main>
+    </section>
   )
 }
