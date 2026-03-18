@@ -1,7 +1,6 @@
 import { prisma } from '@/lib/prisma'
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import Image from 'next/image'
 
 interface CategoriaPageProps {
   params: Promise<{ slug: string }>
