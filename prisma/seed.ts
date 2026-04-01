@@ -104,7 +104,7 @@ async function main() {
     create: {
       name: 'Colar Artesanal Prata',
       slug: 'colar-artesanal-prata',
-      price: 45.00,
+      price: 45.0,
       imageUrl: '/logo-artesanaio.jpeg',
       description: 'Colar delicado feito à mão com contas de prata e miçangas.',
       handmade: true,
@@ -125,6 +125,56 @@ async function main() {
       },
     },
   })
+
+  const products = [produto1, produto2, produto3]
+  const statuses = ['PENDENTE', 'PAGO', 'ENVIADO', 'CANCELADO']
+
+  for (let i = 0; i < 30; i += 1) {
+    const date = new Date()
+    date.setDate(date.getDate() - i)
+
+    const orderCount = Math.floor(Math.random() * 3) + 1
+    const selectedItems = []
+    let total = 0
+
+    for (let j = 0; j < orderCount; j += 1) {
+      const produto = products[Math.floor(Math.random() * products.length)]
+      const quantity = Math.floor(Math.random() * 3) + 1
+      const itemTotal = produto.price * quantity
+      total += itemTotal
+      selectedItems.push({
+        productId: produto.id,
+        name: produto.name,
+        quantity,
+        price: produto.price,
+        size: 'Único',
+        color: 'Natural',
+      })
+    }
+
+    await prisma.order.create({
+      data: {
+        fullName: `Cliente Teste ${i + 1}`,
+        email: `cliente${i + 1}@example.com`,
+        cpf: '00000000000',
+        phone: '11999999999',
+        address: {
+          street: 'Rua Exemplo',
+          number: `${i + 1}`,
+          city: 'São Paulo',
+          state: 'SP',
+          zip: '01234-567',
+        },
+        frete: 15,
+        total: Number(total.toFixed(2)),
+        statusPagamento: statuses[i % statuses.length],
+        createdAt: date,
+        items: {
+          create: selectedItems,
+        },
+      },
+    })
+  }
 
   console.log('Seed executado com sucesso!')
 }
