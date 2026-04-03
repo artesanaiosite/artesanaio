@@ -76,3 +76,22 @@ model Category {
   slug  String   @unique
   products Product[] @relation("ProductCategories")
 }
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  role         String   @default("admin")
+  createdAt    DateTime @default(now())
+  logs         AccessLog[]
+}
+
+model AccessLog {
+  id        String   @id @default(cuid())
+  userId    String?
+  user      AdminUser? @relation(fields: [userId], references: [id])
+  action    String
+  route     String?
+  ip        String?
+  createdAt DateTime @default(now())
+}

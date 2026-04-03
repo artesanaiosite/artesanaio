@@ -13,7 +13,10 @@
     "@hookform/resolvers": "^5.1.0",
     "@prisma/client": "^6.9.0",
     "@types/yup": "^0.29.14",
+    "bcryptjs": "^3.0.3",
     "date-fns": "^4.1.0",
+    "jose": "^6.2.2",
+    "jsonwebtoken": "^9.0.3",
     "lucide-react": "^0.513.0",
     "mercadopago": "^2.7.0",
     "next": "^16.2.0",
@@ -32,6 +35,7 @@
   "devDependencies": {
     "@eslint/eslintrc": "^3",
     "@tailwindcss/postcss": "^4",
+    "@types/jsonwebtoken": "^9.0.10",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
