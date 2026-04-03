@@ -43,7 +43,7 @@ export default function Header() {
           <Link href="/sobre" className="hover:opacity-80 transition">
             Sobre
           </Link>
-          <Link href="/contato" className="hover:opacity-80 transition">
+          <Link href="https://wa.me/5521986369426" className="hover:opacity-80 transition">
             Contato
           </Link>
         </nav>

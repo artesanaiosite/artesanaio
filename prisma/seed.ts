@@ -3,180 +3,138 @@ import { PrismaClient } from '@prisma/client'
 const prisma = new PrismaClient()
 
 async function main() {
-  // Criar categorias
-  const categoriaMigram = await prisma.category.upsert({
-    where: { slug: 'migram' },
-    update: {},
-    create: {
-      name: 'Miçangas',
-      slug: 'migram',
+  console.log('🧹 Limpando banco de dados...')
+
+  // 🔴 Dependentes de Order
+  await prisma.orderItem.deleteMany()
+  await prisma.order.deleteMany()
+
+  // 🔴 Dependentes de Product
+  await prisma.productColor.deleteMany()
+  await prisma.size.deleteMany()
+
+  // 🔴 Principal
+  await prisma.product.deleteMany()
+
+  // 🔴 Relação many-to-many (importante!)
+  await prisma.category.deleteMany()
+
+  console.log('✅ Banco limpo com sucesso!')
+
+  console.log('📦 Criando categorias...')
+
+  const categorias = {
+    micangas: await prisma.category.create({
+      data: { name: 'Miçangas', slug: 'micangas' },
+    }),
+    macrame: await prisma.category.create({
+      data: { name: 'Macramê', slug: 'macrame' },
+    }),
+    acessorios: await prisma.category.create({
+      data: { name: 'Acessórios', slug: 'acessorios' },
+    }),
+    presentes: await prisma.category.create({
+      data: { name: 'Presentes', slug: 'presentes' },
+    }),
+  }
+
+  console.log('🛍️ Criando produtos...')
+
+  const produtos = [
+    {
+      name: 'Chaveiro Bordado Ponto Cruz',
+      slug: 'chaveiro-bordado-ponto-cruz',
+      imageUrl: '/assets/tipos-de-artesanato/Chaveiro-ponto-cruz-bordado.jpg',
+      price: 29.9,
+      description: 'Chaveiro artesanal bordado em ponto cruz, delicado e exclusivo.',
+      categories: [categorias.presentes.id],
     },
-  })
-
-  const categoriaMacrame = await prisma.category.upsert({
-    where: { slug: 'macrame' },
-    update: {},
-    create: {
-      name: 'Macramê',
-      slug: 'macrame',
+    {
+      name: 'Colar Ajustável com Miçangas',
+      slug: 'colar-ajustavel-micangas',
+      imageUrl: '/assets/tipos-de-artesanato/Colar-ajustável-madeira-miçanga.jpg',
+      price: 39.9,
+      description: 'Colar artesanal ajustável com miçangas e detalhes em madeira.',
+      categories: [categorias.acessorios.id, categorias.micangas.id],
     },
-  })
-
-  const categoriaColares = await prisma.category.upsert({
-    where: { slug: 'colares' },
-    update: {},
-    create: {
-      name: 'Colares',
-      slug: 'colares',
+    {
+      name: 'Cordão para Celular Artesanal',
+      slug: 'cordao-celular-artesanal',
+      imageUrl:
+        '/assets/tipos-de-artesanato/Cordinha-de-celular-phone-strap-guarda-celular-salva-celular-pulseira-de-celular-de-miçanga.jpg',
+      price: 34.9,
+      description: 'Cordão de celular artesanal feito com miçangas, moderno e funcional.',
+      categories: [categorias.acessorios.id],
     },
-  })
-
-  const categoriaPulseiras = await prisma.category.upsert({
-    where: { slug: 'pulseiras' },
-    update: {},
-    create: {
-      name: 'Pulseiras',
-      slug: 'pulseiras',
+    {
+      name: 'Pulseira Borboleta Colorida',
+      slug: 'pulseira-borboleta-micanga',
+      imageUrl: '/assets/tipos-de-artesanato/Pulseira-de-borboleta-miçanga-colorida.jpg',
+      price: 24.9,
+      description: 'Pulseira artesanal com miçangas coloridas e detalhe de borboleta.',
+      categories: [categorias.micangas.id, categorias.acessorios.id],
     },
-  })
-
-  // Criar produtos
-  const produto1 = await prisma.product.upsert({
-    where: { slug: 'pulseira-migram-colorida' },
-    update: {},
-    create: {
-      name: 'Pulseira de Miçangas Colorida',
-      slug: 'pulseira-migram-colorida',
-      price: 25.00,
-      imageUrl: '/logo-artesanaio.jpeg',
-      description: 'Pulseira artesanal feita com miçangas coloridas, perfeita para o dia a dia.',
-      handmade: true,
-      materials: 'Miçangas de vidro, fio nylon',
-      stock: 10,
-      colors: {
-        create: [
-          { name: 'Vermelho', hex: '#FF0000' },
-          { name: 'Azul', hex: '#0000FF' },
-        ],
-      },
-      sizes: {
-        create: [
-          { name: 'Único' },
-        ],
-      },
-      categories: {
-        connect: [{ id: categoriaMigram.id }, { id: categoriaPulseiras.id }],
-      },
+    {
+      name: 'Pulseira Estrela Colorida',
+      slug: 'pulseira-estrela-micanga',
+      imageUrl: '/assets/tipos-de-artesanato/Pulseira-de-estrela-miçanga-colorida.jpg',
+      price: 24.9,
+      description: 'Pulseira com detalhe de estrela feita à mão com miçangas.',
+      categories: [categorias.micangas.id],
     },
-  })
-
-  const produto2 = await prisma.product.upsert({
-    where: { slug: 'macrame-planta' },
-    update: {},
-    create: {
-      name: 'Macramê Planta Suspensa',
-      slug: 'macrame-planta',
-      price: 80.00,
-      imageUrl: '/logo-artesanaio.jpeg',
-      description: 'Decoração artesanal em macramê para plantas, feita à mão com cordas naturais.',
-      handmade: true,
-      materials: 'Cordas de algodão, argolas de madeira',
-      stock: 5,
-      colors: {
-        create: [
-          { name: 'Natural', hex: '#D2B48C' },
-        ],
-      },
-      sizes: {
-        create: [
-          { name: 'Médio' },
-        ],
-      },
-      categories: {
-        connect: [{ id: categoriaMacrame.id }],
-      },
+    {
+      name: 'Pulseira Flor Artesanal',
+      slug: 'pulseira-flor-micanga',
+      imageUrl: '/assets/tipos-de-artesanato/Pulseira-de-flor-miçanga-colorida.jpg',
+      price: 24.9,
+      description: 'Pulseira delicada com flores feitas em miçangas.',
+      categories: [categorias.micangas.id],
     },
-  })
-
-  const produto3 = await prisma.product.upsert({
-    where: { slug: 'colar-artesanal-prata' },
-    update: {},
-    create: {
-      name: 'Colar Artesanal Prata',
-      slug: 'colar-artesanal-prata',
-      price: 45.0,
-      imageUrl: '/logo-artesanaio.jpeg',
-      description: 'Colar delicado feito à mão com contas de prata e miçangas.',
-      handmade: true,
-      materials: 'Contas de prata, miçangas, corrente fina',
-      stock: 8,
-      colors: {
-        create: [
-          { name: 'Prata', hex: '#C0C0C0' },
-        ],
-      },
-      sizes: {
-        create: [
-          { name: 'Ajustável' },
-        ],
-      },
-      categories: {
-        connect: [{ id: categoriaColares.id }],
-      },
+    {
+      name: 'Kit Pulseiras Macramê Personalizadas',
+      slug: 'kit-pulseiras-macrame',
+      imageUrl:
+        '/assets/tipos-de-artesanato/Kit-pulseira-letra-inicial-do-nome-preto-e-branco-simples-unissex-ajustavel-regulavel-2.jpg',
+      price: 49.9,
+      description: 'Kit de pulseiras em macramê com letras personalizadas.',
+      categories: [categorias.macrame.id, categorias.acessorios.id],
     },
-  })
+    {
+      name: 'Toalha Personalizada Bordada',
+      slug: 'toalha-personalizada-bordada',
+      imageUrl:
+        '/assets/tipos-de-artesanato/Toalha-personalizada-bordado-ponto-cruz-nome.jpg',
+      price: 59.9,
+      description: 'Toalha artesanal bordada com nome personalizado.',
+      categories: [categorias.presentes.id],
+    },
+  ]
 
-  const products = [produto1, produto2, produto3]
-  const statuses = ['PENDENTE', 'PAGO', 'ENVIADO', 'CANCELADO']
-
-  for (let i = 0; i < 30; i += 1) {
-    const date = new Date()
-    date.setDate(date.getDate() - i)
-
-    const orderCount = Math.floor(Math.random() * 3) + 1
-    const selectedItems = []
-    let total = 0
-
-    for (let j = 0; j < orderCount; j += 1) {
-      const produto = products[Math.floor(Math.random() * products.length)]
-      const quantity = Math.floor(Math.random() * 3) + 1
-      const itemTotal = produto.price * quantity
-      total += itemTotal
-      selectedItems.push({
-        productId: produto.id,
-        name: produto.name,
-        quantity,
-        price: produto.price,
-        size: 'Único',
-        color: 'Natural',
-      })
-    }
-
-    await prisma.order.create({
+  for (const produto of produtos) {
+    await prisma.product.create({
       data: {
-        fullName: `Cliente Teste ${i + 1}`,
-        email: `cliente${i + 1}@example.com`,
-        cpf: '00000000000',
-        phone: '11999999999',
-        address: {
-          street: 'Rua Exemplo',
-          number: `${i + 1}`,
-          city: 'São Paulo',
-          state: 'SP',
-          zip: '01234-567',
+        name: produto.name,
+        slug: produto.slug,
+        price: produto.price,
+        imageUrl: produto.imageUrl,
+        description: produto.description,
+        handmade: true,
+        materials: 'Produzido artesanalmente',
+        stock: 10,
+        colors: {
+          create: [{ name: 'Padrão', hex: '#000000' }],
         },
-        frete: 15,
-        total: Number(total.toFixed(2)),
-        statusPagamento: statuses[i % statuses.length],
-        createdAt: date,
-        items: {
-          create: selectedItems,
+        sizes: {
+          create: [{ name: 'Único' }],
+        },
+        categories: {
+          connect: produto.categories.map((id) => ({ id })),
         },
       },
     })
   }
 
-  console.log('Seed executado com sucesso!')
+  console.log('✅ Seed finalizado com sucesso!')
 }
 
 main()
