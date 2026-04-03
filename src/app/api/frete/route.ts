@@ -4,23 +4,16 @@ import { NextResponse } from 'next/server'
 interface MelhorEnvioResponse {
   id: number
   name: string
-  price: number
-  delivery_time: number
+  price?: string
+  delivery_time?: number
   error?: string
 }
 
 export async function POST(request: Request) {
   try {
-    const body = await request.json()
+    const { cepDestino, quantidade } = await request.json()
 
-    console.log('📦 REQUEST FRETE:', body)
-
-    const { cepDestino, quantidade } = body
-
-    if (!cepDestino || cepDestino.length !== 8) {
-      console.warn('⚠️ CEP inválido:', cepDestino)
-      return NextResponse.json({ error: 'CEP inválido' }, { status: 400 })
-    }
+    console.log('📦 REQUEST:', { cepDestino, quantidade })
 
     const response = await fetch(
       'https://www.melhorenvio.com.br/api/v2/me/shipment/calculate',
@@ -50,37 +43,39 @@ export async function POST(request: Request) {
 
     const data = await response.json()
 
-    console.log('🚚 RESPOSTA MELHOR ENVIO:', {
-      status: response.status,
-      data,
-    })
+    console.log('🚚 RESPOSTA BRUTA:', data)
 
     if (!response.ok) {
-      console.error('❌ ERRO MELHOR ENVIO COMPLETO:', {
-        status: response.status,
-        headers: Object.fromEntries(response.headers.entries()),
-        body: data,
-      })
-
-      return NextResponse.json(
-        {
-          error: 'Erro ao calcular frete',
-          details: data,
-        },
-        { status: 400 }
-      )
+      console.error('❌ ERRO API:', data)
+      return NextResponse.json({ error: 'Erro na API' }, { status: 400 })
     }
 
-    return NextResponse.json(data)
-  } catch (err: any) {
-    console.error('💥 ERRO INTERNO COMPLETO:', {
-      message: err.message,
-      stack: err.stack,
-    })
+    // 🎯 FILTRO FINAL (PAC + SEDEX válidos)
+    const resultado = data
+      .filter((service: MelhorEnvioResponse) => {
+        const nome = service.name?.toLowerCase() || ''
 
-    return NextResponse.json(
-      { error: 'Erro interno', details: err.message },
-      { status: 500 }
-    )
+        const isPacOrSedex =
+          nome === 'pac' || nome === 'sedex'
+
+        const hasError =
+          service.error &&
+          service.error.includes('não atende')
+
+        return isPacOrSedex && !hasError && service.price
+      })
+      .map((service: MelhorEnvioResponse) => ({
+        id: service.id,
+        name: service.name,
+        price: Number(service.price).toFixed(2),
+        delivery_time: service.delivery_time,
+      }))
+
+    console.log('✅ RESULTADO FINAL:', resultado)
+
+    return NextResponse.json(resultado)
+  } catch (err: any) {
+    console.error('💥 ERRO:', err)
+    return NextResponse.json({ error: 'Erro interno' }, { status: 500 })
   }
 }
