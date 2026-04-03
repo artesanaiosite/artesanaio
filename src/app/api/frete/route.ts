@@ -32,7 +32,7 @@ export async function POST(request: Request) {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${process.env.MELHOR_ENVIO_TOKEN}`,
-        'User-Agent': 'Ecommerce-Clotes ageisislane@gmail.com',
+        'User-Agent': 'Artesanaio-Dev ageisislane@gmail.com',
       },
       body: JSON.stringify({
         from: { postal_code: '25935506' },
